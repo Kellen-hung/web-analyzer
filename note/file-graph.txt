@@ -1,0 +1,41 @@
+HTML
+├── NAVIGATES_TO ──> HTML               ***瀏覽器切換到另一個 HTML document***
+├── LOADS_HTML ────> HTML               ***把另一份 HTML 抓回來，放進目前頁面 (要看 js)***
+├── LOADS ─────────> JavaScript
+├── LOADS ─────────> CSS
+├── EMBEDS ────────> Image
+├── REQUESTS ──────> CGI
+└── REQUESTS ──────> JSON
+
+
+JavaScript
+├── NAVIGATES_TO ──> HTML
+├── IMPORTS ───────> JavaScript
+├── LOADS ─────────> CSS
+├── REFERENCES ────> Image
+├── REQUESTS ──────> CGI
+└── REQUESTS ──────> JSON
+
+
+CSS
+├── IMPORTS ───────> CSS
+├── REFERENCES ────> Image
+└── REFERENCES ────> Other Asset / Font
+
+
+Image
+└── [Leaf]
+
+
+CGI
+├── GENERATES ─────> HTML
+├── GENERATES ─────> JavaScript
+├── GENERATES ─────> CSS
+├── GENERATES ─────> Image
+├── GENERATES ─────> JSON
+└── REDIRECTS_TO ──> Any Resource
+
+
+JSON
+├── REFERENCES ────> HTML / JS / CSS / Asset / CGI   [if path stored inside]
+└── [Leaf]                                             [if pure data]
