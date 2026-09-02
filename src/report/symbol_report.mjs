@@ -1,3 +1,61 @@
+const CONFIDENCE_RANK = new Map([
+    ["HIGH", 0],
+    ["MEDIUM", 1],
+    ["LOW", 2]
+]);
+
+
+function compareText(left, right) {
+    return left === right ? 0 : left < right ? -1 : 1;
+}
+
+
+function reportSourcePath(candidate) {
+    return String(candidate.sourcePath ?? candidate.sourceId ?? "")
+        .replaceAll("\\", "/");
+}
+
+
+function reportSourceBasename(candidate) {
+    const sourcePath = reportSourcePath(candidate);
+    return sourcePath.slice(sourcePath.lastIndexOf("/") + 1);
+}
+
+
+export function orderSymbolCandidatesForReport(candidates) {
+    return candidates
+        .map((candidate, originalIndex) => ({ candidate, originalIndex }))
+        .sort((left, right) => {
+            const leftCandidate = left.candidate;
+            const rightCandidate = right.candidate;
+            const leftLine = Number.isFinite(leftCandidate.declarationLine)
+                ? leftCandidate.declarationLine
+                : Number.MAX_SAFE_INTEGER;
+            const rightLine = Number.isFinite(rightCandidate.declarationLine)
+                ? rightCandidate.declarationLine
+                : Number.MAX_SAFE_INTEGER;
+
+            return (CONFIDENCE_RANK.get(leftCandidate.confidence) ?? 3) -
+                    (CONFIDENCE_RANK.get(rightCandidate.confidence) ?? 3) ||
+                compareText(
+                    reportSourceBasename(leftCandidate),
+                    reportSourceBasename(rightCandidate)
+                ) ||
+                compareText(
+                    reportSourcePath(leftCandidate),
+                    reportSourcePath(rightCandidate)
+                ) ||
+                leftLine - rightLine ||
+                compareText(
+                    String(leftCandidate.name ?? ""),
+                    String(rightCandidate.name ?? "")
+                ) ||
+                left.originalIndex - right.originalIndex;
+        })
+        .map(item => item.candidate);
+}
+
+
 function renderCandidateEvidence(candidate, context) {
     const lines = [
         `  ${context.status(candidate.confidence, candidate.confidence)}` +
@@ -34,7 +92,7 @@ export function renderSymbolCandidates(result, context) {
         return lines;
     }
 
-    for (const candidate of candidates) {
+    for (const candidate of orderSymbolCandidatesForReport(candidates)) {
         lines.push(...renderCandidateEvidence(candidate, context));
     }
 

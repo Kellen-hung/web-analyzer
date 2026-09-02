@@ -368,12 +368,10 @@ export async function analyzeLmParams({
         accessesByField.get(field) ?? [],
         packageRiskFlags
     ));
+    // `fields` starts with JSON keys in snapshot order. Filtering it keeps
+    // surviving cleanup candidates in that same order.
     const candidates = fields.filter(field =>
         field.classification === "NO_FRONTEND_CONSUMER_CANDIDATE"
-    ).sort((left, right) =>
-        ["HIGH", "MEDIUM", "LOW"].indexOf(left.confidence) -
-            ["HIGH", "MEDIUM", "LOW"].indexOf(right.confidence) ||
-        left.field.localeCompare(right.field)
     );
     const consumedFields = fields.filter(field =>
         field.classification === "FRONTEND_CONSUMED"

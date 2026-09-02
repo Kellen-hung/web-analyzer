@@ -80,6 +80,22 @@ function render(mode = "verbose", overrides = {}) {
 }
 
 
+function assertAppearsInOrder(output, labels) {
+    const positions = labels.map(label => output.indexOf(label));
+
+    for (let index = 0; index < labels.length; index += 1) {
+        assert.notEqual(positions[index], -1, `missing ${labels[index]}`);
+    }
+
+    for (let index = 1; index < positions.length; index += 1) {
+        assert(
+            positions[index - 1] < positions[index],
+            `${labels[index - 1]} should appear before ${labels[index]}`
+        );
+    }
+}
+
+
 test.before(async () => {
     reportResult = await buildReportFixture();
 });
@@ -186,6 +202,124 @@ test("verbose terminal and HTML reports contain equivalent major sections", () =
     for (const heading of headings) {
         assert(terminal.includes(heading), `terminal missing ${heading}`);
         assert(html.includes(heading), `HTML missing ${heading}`);
+    }
+});
+
+
+test("terminal and HTML use the same symbol candidate order", () => {
+    const result = structuredClone(reportResult);
+    const template = result.symbolCandidates.candidates[0];
+    result.symbolCandidates.candidates = [
+        {
+            ...template,
+            confidence: "LOW",
+            name: "lowTarget",
+            sourceId: "legacy/z-last.js",
+            sourcePath: "legacy/z-last.js"
+        },
+        {
+            ...template,
+            confidence: "HIGH",
+            name: "networkTarget",
+            sourceId: "js/tab-network.js",
+            sourcePath: "js/tab-network.js"
+        },
+        {
+            ...template,
+            confidence: "MEDIUM",
+            name: "mediumTarget",
+            sourceId: "js/a-first.js",
+            sourcePath: "js/a-first.js"
+        },
+        {
+            ...template,
+            confidence: "HIGH",
+            name: "includeTarget",
+            sourceId: "legacy/include.js",
+            sourcePath: "legacy/include.js"
+        }
+    ];
+    const expected = [
+        "includeTarget",
+        "networkTarget",
+        "mediumTarget",
+        "lowTarget"
+    ];
+
+    for (const mode of ["default", "verbose", "debug"]) {
+        const terminal = renderCliReport(result, {
+            root: "fixture/www",
+            mode,
+            colorEnabled: false
+        });
+        const html = renderHtmlReport(result, {
+            root: "fixture/www",
+            mode,
+            generatedAt: FIXED_TIME
+        });
+
+        assertAppearsInOrder(terminal, expected);
+        assertAppearsInOrder(html, expected);
+    }
+});
+
+
+test("terminal and HTML preserve the same LM_PARAM candidate order", () => {
+    const result = structuredClone(reportResult);
+    const candidates = ["STATE", "ACCESS_ON", "DBG", "SHARE_USB"].map(
+        field => ({
+            field,
+            jsonPresent: true,
+            reads: 0,
+            writes: 0,
+            readWrites: 0,
+            consumers: [],
+            accesses: [],
+            classification: "NO_FRONTEND_CONSUMER_CANDIDATE",
+            confidence: "HIGH",
+            riskFlags: [],
+            reason: "No frontend consumer was observed."
+        })
+    );
+    result.lmParamAnalysis = {
+        ...result.lmParamAnalysis,
+        input: { configured: true, available: true, path: "lm.json" },
+        fields: candidates,
+        candidates,
+        consumedFields: [],
+        frontendMissingFields: [],
+        runtimeAccesses: [],
+        riskSites: [],
+        coverageErrors: [],
+        counts: {
+            jsonFields: 4,
+            staticallyFrontendReadFields: 0,
+            frontendConsumed: 0,
+            writeOnlyFields: 0,
+            noConsumerCandidates: 4,
+            frontendMissingFromJson: 0,
+            dynamicAccessSites: 0,
+            genericRuntimeCodeSites: 0,
+            wholeObjectRiskSites: 0,
+            byConfidence: { HIGH: 4, MEDIUM: 0, LOW: 0 }
+        }
+    };
+    const expected = ["STATE", "ACCESS_ON", "DBG", "SHARE_USB"];
+
+    for (const mode of ["verbose", "debug"]) {
+        const terminal = renderCliReport(result, {
+            root: "fixture/www",
+            mode,
+            colorEnabled: false
+        });
+        const html = renderHtmlReport(result, {
+            root: "fixture/www",
+            mode,
+            generatedAt: FIXED_TIME
+        });
+
+        assertAppearsInOrder(terminal, expected);
+        assertAppearsInOrder(html, expected);
     }
 });
 

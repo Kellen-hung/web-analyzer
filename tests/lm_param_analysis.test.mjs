@@ -247,6 +247,51 @@ test("JSON field with no reads remains a visible cleanup candidate", async () =>
 });
 
 
+test("LM_PARAM candidates preserve JSON field order", async () => {
+    await withFixture({
+        "www/index.html": "<p>No scripts</p>",
+        "lm_params.json": json(["STATE", "ACCESS_ON", "DBG", "SHARE_USB"])
+    }, async directory => {
+        const result = await analyzeFixture(directory);
+
+        assert.deepEqual(
+            result.lmParamAnalysis.candidates.map(candidate => candidate.field),
+            ["STATE", "ACCESS_ON", "DBG", "SHARE_USB"]
+        );
+    });
+});
+
+
+test("LM_PARAM candidate filtering preserves surviving JSON order", async () => {
+    await withFixture({
+        "www/index.html": "<script>use(LM_PARAM.B); use(LM_PARAM.D);</script>",
+        "lm_params.json": json(["A", "B", "C", "D"])
+    }, async directory => {
+        const result = await analyzeFixture(directory);
+
+        assert.deepEqual(
+            result.lmParamAnalysis.candidates.map(candidate => candidate.field),
+            ["A", "C"]
+        );
+    });
+});
+
+
+test("LM_PARAM candidate order is not alphabetical", async () => {
+    await withFixture({
+        "www/index.html": "<p>No scripts</p>",
+        "lm_params.json": json(["Z_FIELD", "A_FIELD", "M_FIELD"])
+    }, async directory => {
+        const result = await analyzeFixture(directory);
+
+        assert.deepEqual(
+            result.lmParamAnalysis.candidates.map(candidate => candidate.field),
+            ["Z_FIELD", "A_FIELD", "M_FIELD"]
+        );
+    });
+});
+
+
 test("write-only JSON field remains visible with write-only risk", async () => {
     await withFixture({
         "www/index.html": "<script>LM_PARAM.FOO = value;</script>",

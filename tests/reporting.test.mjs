@@ -36,6 +36,22 @@ function candidate(overrides = {}) {
 }
 
 
+function assertAppearsInOrder(output, labels) {
+    const positions = labels.map(label => output.indexOf(label));
+
+    for (let index = 0; index < labels.length; index += 1) {
+        assert.notEqual(positions[index], -1, `missing ${labels[index]}`);
+    }
+
+    for (let index = 1; index < positions.length; index += 1) {
+        assert(
+            positions[index - 1] < positions[index],
+            `${labels[index - 1]} should appear before ${labels[index]}`
+        );
+    }
+}
+
+
 function makeResult() {
     const high = candidate();
     const medium = candidate({
@@ -319,6 +335,114 @@ test("verbose report keeps low-confidence candidates in the main queue", () => {
 });
 
 
+test("symbol report orders HIGH before MEDIUM and LOW", () => {
+    const result = makeResult();
+    result.symbolCandidates.candidates = [
+        candidate({ confidence: "LOW", name: "lowTarget" }),
+        candidate({ confidence: "MEDIUM", name: "mediumTarget" }),
+        candidate({ confidence: "HIGH", name: "highTarget" })
+    ];
+    const originalOrder = result.symbolCandidates.candidates.map(item =>
+        item.name
+    );
+
+    for (const mode of ["default", "verbose"]) {
+        const output = renderCliReport(result, {
+            root: "fixture/www",
+            mode
+        });
+        assertAppearsInOrder(output, [
+            "highTarget",
+            "mediumTarget",
+            "lowTarget"
+        ]);
+    }
+
+    assert.deepEqual(
+        result.symbolCandidates.candidates.map(item => item.name),
+        originalOrder
+    );
+});
+
+
+test("same-confidence symbol candidates order by source basename", () => {
+    const result = makeResult();
+    result.symbolCandidates.candidates = [
+        candidate({
+            name: "networkTarget",
+            sourceId: "js/tab-network.js",
+            sourcePath: "js/tab-network.js"
+        }),
+        candidate({
+            name: "aesTarget",
+            sourceId: "js/tab-aes67.js",
+            sourcePath: "js/tab-aes67.js"
+        }),
+        candidate({
+            name: "includeTarget",
+            sourceId: "legacy/include.js",
+            sourcePath: "legacy/include.js"
+        })
+    ];
+    const output = renderCliReport(result, {
+        root: "fixture/www",
+        mode: "verbose"
+    });
+
+    assertAppearsInOrder(output, [
+        "includeTarget",
+        "aesTarget",
+        "networkTarget"
+    ]);
+});
+
+
+test("same symbol source basename uses the full path tie-breaker", () => {
+    const result = makeResult();
+    result.symbolCandidates.candidates = [
+        candidate({
+            name: "alphabeticallyFirstButZPath",
+            sourceId: "z/include.js",
+            sourcePath: "z/include.js"
+        }),
+        candidate({
+            name: "alphabeticallyLastButAPath",
+            sourceId: "a/include.js",
+            sourcePath: "a/include.js"
+        })
+    ];
+    const output = renderCliReport(result, {
+        root: "fixture/www",
+        mode: "verbose"
+    });
+
+    assertAppearsInOrder(output, [
+        "alphabeticallyLastButAPath",
+        "alphabeticallyFirstButZPath"
+    ]);
+});
+
+
+test("same symbol source uses line number then symbol name", () => {
+    const result = makeResult();
+    result.symbolCandidates.candidates = [
+        candidate({ name: "lateTarget", declarationLine: 20 }),
+        candidate({ name: "zetaTarget", declarationLine: 10 }),
+        candidate({ name: "alphaTarget", declarationLine: 10 })
+    ];
+    const output = renderCliReport(result, {
+        root: "fixture/www",
+        mode: "verbose"
+    });
+
+    assertAppearsInOrder(output, [
+        "alphaTarget",
+        "zetaTarget",
+        "lateTarget"
+    ]);
+});
+
+
 test("normal and verbose reports hide not-removable observations", () => {
     const result = makeResult();
 
@@ -429,6 +553,31 @@ test("verbose report includes LM_PARAM candidate, missing, and risk sections", (
     assert.match(output, /LM_PARAM FRONTEND-MISSING FIELDS · 1/);
     assert.match(output, /MISSING_FIELD/);
     assert.match(output, /DYNAMIC_LM_PARAM_PROPERTY_ACCESS\s+1/);
+});
+
+
+test("verbose and debug reports preserve LM_PARAM candidate input order", () => {
+    const result = withLmParamAnalysis();
+    const template = result.lmParamAnalysis.candidates[0];
+    result.lmParamAnalysis.candidates = [
+        "STATE",
+        "ACCESS_ON",
+        "DBG",
+        "SHARE_USB"
+    ].map(field => ({ ...template, field }));
+
+    for (const mode of ["verbose", "debug"]) {
+        const output = renderCliReport(result, {
+            root: "fixture/www",
+            mode
+        });
+        assertAppearsInOrder(output, [
+            "STATE",
+            "ACCESS_ON",
+            "DBG",
+            "SHARE_USB"
+        ]);
+    }
 });
 
 

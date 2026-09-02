@@ -1,5 +1,6 @@
 import { countBy } from "./report_format.mjs";
 import { renderLmParamSummary } from "./lm_param_report.mjs";
+import { orderSymbolCandidatesForReport } from "./symbol_report.mjs";
 
 
 export function renderPackageSummary(result, context) {
@@ -61,11 +62,11 @@ export function renderTopFileCandidates(result, context, limit = 10) {
 
 export function renderTopSymbolCandidates(result, context, limit = 10) {
     const lines = [context.heading("TOP SYMBOL CANDIDATES")];
-    const candidates = result.symbolCandidates.candidates
-        .filter(candidate =>
+    const candidates = orderSymbolCandidatesForReport(
+        result.symbolCandidates.candidates.filter(candidate =>
             candidate.classification === "UNUSED_SYMBOL_CANDIDATE"
         )
-        .slice(0, limit);
+    ).slice(0, limit);
 
     if (candidates.length === 0) {
         lines.push("  none");
