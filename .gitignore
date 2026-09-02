@@ -1,7 +1,12 @@
 input/**
+A4610D-RX/**
+A4610D-TX/**
+TX/**
+tmp/**
 !input/.gitkeep
 
 output/
+reports/
 node_modules/
 
 *.tgz
@@ -12,6 +17,7 @@ node_modules/
 *.backup
 *~
 backup*/
+tmp/
 
 __pycache__/
 *.pyc

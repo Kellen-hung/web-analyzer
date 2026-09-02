@@ -1,7 +1,7 @@
 {
   "name": "rx-web-analyzer",
   "version": "1.0.0",
-  "description": "Conservative Phase 1 world and file-evidence analyzer for input/www.",
+  "description": "Conservative world and cleanup-evidence analyzer for configured RX WebUI packages.",
   "main": "src/main.mjs",
   "scripts": {
     "test": "node --test",
@@ -14,6 +14,8 @@
   "dependencies": {
     "acorn": "^8.18.0",
     "acorn-walk": "^8.3.5",
+    "eslint-scope": "^9.1.2",
+    "globals": "^17.11.0",
     "parse5": "^8.0.1",
     "picocolors": "^1.1.1",
     "postcss": "^8.5.6",

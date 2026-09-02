@@ -33,7 +33,9 @@ function getImportTarget(params) {
 }
 
 
-export function inspectCss(source, sourcePath) {
+export function inspectCss(source, sourcePath, {
+    vendor = false
+} = {}) {
     let root;
 
     try {
@@ -44,7 +46,8 @@ export function inspectCss(source, sourcePath) {
         return {
             path: sourcePath,
             parseError: error.message,
-            references: []
+            references: [],
+            vendor
         };
     }
 
@@ -93,12 +96,15 @@ export function inspectCss(source, sourcePath) {
     return {
         path: sourcePath,
         parseError: null,
-        references
+        references,
+        vendor
     };
 }
 
 
-export async function buildCssFacts(wwwDirectory, inventory) {
+export async function buildCssFacts(wwwDirectory, inventory, {
+    vendorPatterns = []
+} = {}) {
     const results = [];
 
     for (const file of inventory) {
@@ -111,7 +117,9 @@ export async function buildCssFacts(wwwDirectory, inventory) {
             ...file.path.split("/")
         );
         const source = await fs.readFile(fullPath, "utf8");
-        results.push(inspectCss(source, file.path));
+        results.push(inspectCss(source, file.path, {
+            vendor: vendorPatterns.some(pattern => pattern.test(file.path))
+        }));
     }
 
     return results;

@@ -2,6 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import * as acorn from "acorn";
 import * as walk from "acorn-walk";
+import * as eslintScope from "eslint-scope";
+import { DEFAULT_VENDOR_JS_PATTERNS } from "../config/analyzer_config.mjs";
 
 
 const RESOURCE_HINT_PATTERN =
@@ -118,6 +120,71 @@ function getStaticStringPrefix(node) {
     }
 
     return inspectPrefix(node)?.value ?? null;
+}
+
+
+function inspectStaticCodeReferences(code) {
+    if (typeof code !== "string") {
+        return [];
+    }
+
+    try {
+        const ast = acorn.parse(code, {
+            ecmaVersion: "latest",
+            sourceType: "script",
+            locations: true
+        });
+        const scopeManager = eslintScope.analyze(ast, {
+            ecmaVersion: 2022,
+            sourceType: "script"
+        });
+
+        return scopeManager.globalScope.through.map(reference => ({
+            name: reference.identifier.name,
+            read: reference.isRead(),
+            write: reference.isWrite(),
+            line: reference.identifier.loc?.start.line ?? null
+        }));
+    } catch {
+        return [];
+    }
+}
+
+
+function getEnclosingFunctionNames(ancestors) {
+    const names = [];
+
+    for (let index = 0; index < ancestors.length - 1; index++) {
+        const ancestor = ancestors[index];
+
+        if (ancestor.type === "FunctionDeclaration" && ancestor.id?.name) {
+            names.push(ancestor.id.name);
+            continue;
+        }
+
+        if (
+            ["FunctionExpression", "ArrowFunctionExpression"].includes(
+                ancestor.type
+            )
+        ) {
+            if (ancestor.id?.name) {
+                names.push(ancestor.id.name);
+                continue;
+            }
+
+            const parent = index > 0 ? ancestors[index - 1] : null;
+
+            if (
+                parent?.type === "VariableDeclarator" &&
+                parent.init === ancestor &&
+                parent.id.type === "Identifier"
+            ) {
+                names.push(parent.id.name);
+            }
+        }
+    }
+
+    return [...new Set(names)];
 }
 
 
@@ -463,8 +530,16 @@ function getSimpleUrlHelpers(ast, source) {
 }
 
 
-function isLikelyVendorSource(sourceId) {
-    return /(?:^|\/)jquery(?:[-.]|$).*\.min\.js$/i.test(sourceId);
+function matchesAnyPattern(sourceId, patterns) {
+    return patterns.some(pattern => pattern.test(sourceId));
+}
+
+
+function isLikelyVendorSource(
+    sourceId,
+    patterns = DEFAULT_VENDOR_JS_PATTERNS
+) {
+    return matchesAnyPattern(sourceId, patterns);
 }
 
 
@@ -512,11 +587,38 @@ export function inspectJavaScript(
     const dynamicSeen = new Set();
     const hintSeen = new Set();
     const xhrReceivers = collectXhrReceivers(ast, source);
+    const enclosingFunctionNamesByNode = new WeakMap();
     const lineFor = node => (
         node.loc?.start.line === undefined
             ? null
             : node.loc.start.line + lineOffset
     );
+
+    walk.ancestor(ast, {
+        CallExpression(node, ancestors) {
+            enclosingFunctionNamesByNode.set(
+                node,
+                getEnclosingFunctionNames(ancestors)
+            );
+        },
+        NewExpression(node, ancestors) {
+            enclosingFunctionNamesByNode.set(
+                node,
+                getEnclosingFunctionNames(ancestors)
+            );
+        },
+        MemberExpression(node, ancestors) {
+            enclosingFunctionNamesByNode.set(
+                node,
+                getEnclosingFunctionNames(ancestors)
+            );
+        }
+    });
+
+    const dynamicContextFor = node => ({
+        enclosingFunctionNames:
+            enclosingFunctionNamesByNode.get(node) ?? []
+    });
 
     walk.simple(ast, {
         CallExpression(node) {
@@ -575,7 +677,8 @@ export function inspectJavaScript(
                     {
                         type: "DYNAMIC_SCRIPT_LOAD",
                         api: "$.getScript",
-                        line
+                        line,
+                        ...dynamicContextFor(node)
                     }
                 );
             }
@@ -676,12 +779,19 @@ export function inspectJavaScript(
              * eval(...)
              */
             if (isIdentifier(node.callee, "eval")) {
+                const staticCode = getLiteralString(node.arguments[0]);
                 addFact(
                     dynamicSites,
                     dynamicSeen,
                     {
                         type: "EVAL",
-                        line
+                        line,
+                        ...(staticCode === null ? {} : {
+                            staticCode,
+                            staticReferences:
+                                inspectStaticCodeReferences(staticCode)
+                        }),
+                        ...dynamicContextFor(node)
                     }
                 );
             }
@@ -699,7 +809,8 @@ export function inspectJavaScript(
                     dynamicSeen,
                     {
                         type: "DOCUMENT_WRITE",
-                        line
+                        line,
+                        ...dynamicContextFor(node)
                     }
                 );
             }
@@ -713,12 +824,16 @@ export function inspectJavaScript(
                 isIdentifier(node.callee, "setTimeout") &&
                 getLiteralString(node.arguments[0]) !== null
             ) {
+                const staticCode = getLiteralString(node.arguments[0]);
                 addFact(
                     dynamicSites,
                     dynamicSeen,
                     {
                         type: "STRING_SETTIMEOUT",
-                        line
+                        line,
+                        staticCode,
+                        staticReferences: inspectStaticCodeReferences(staticCode),
+                        ...dynamicContextFor(node)
                     }
                 );
             }
@@ -732,7 +847,8 @@ export function inspectJavaScript(
                     dynamicSeen,
                     {
                         type: "CUSTOM_SCRIPT_LOADER",
-                        line
+                        line,
+                        ...dynamicContextFor(node)
                     }
                 );
             }
@@ -746,7 +862,8 @@ export function inspectJavaScript(
                     dynamicSeen,
                     {
                         type: "NEW_FUNCTION",
-                        line: lineFor(node)
+                        line: lineFor(node),
+                        ...dynamicContextFor(node)
                     }
                 );
             }
@@ -771,7 +888,8 @@ export function inspectJavaScript(
                     {
                         type: "DYNAMIC_WINDOW_PROPERTY",
                         expression: getSourceText(source, node),
-                        line: lineFor(node)
+                        line: lineFor(node),
+                        ...dynamicContextFor(node)
                     }
                 );
             }
@@ -825,7 +943,7 @@ export function inspectJavaScript(
 }
 
 
-async function inspectJsFile(wwwDirectory, file) {
+async function inspectJsFile(wwwDirectory, file, vendorPatterns) {
     const fullPath = path.join(
         wwwDirectory,
         ...file.path.split("/")
@@ -833,14 +951,19 @@ async function inspectJsFile(wwwDirectory, file) {
 
     const source = await fs.readFile(fullPath, "utf8");
 
-    return inspectJavaScript(source, file.path);
+    return inspectJavaScript(source, file.path, {
+        vendor: isLikelyVendorSource(file.path, vendorPatterns)
+    });
 }
 
 
 export async function buildJsFacts(
     wwwDirectory,
     inventory,
-    htmlFacts
+    htmlFacts,
+    {
+        vendorPatterns
+    } = {}
 ) {
     const results = [];
 
@@ -853,7 +976,7 @@ export async function buildJsFacts(
         }
 
         results.push(
-            await inspectJsFile(wwwDirectory, file)
+            await inspectJsFile(wwwDirectory, file, vendorPatterns)
         );
     }
 
@@ -869,7 +992,8 @@ export async function buildJsFacts(
                     inlineScript.code,
                     sourceId,
                     {
-                        lineOffset: Math.max(0, (inlineScript.line ?? 1) - 1)
+                        lineOffset: Math.max(0, (inlineScript.line ?? 1) - 1),
+                        vendor: isLikelyVendorSource(sourceId, vendorPatterns)
                     }
                 )
             );
@@ -889,7 +1013,8 @@ export async function buildJsFacts(
                     sourceId,
                     {
                         allowReturnOutsideFunction: true,
-                        lineOffset: Math.max(0, (handler.line ?? 1) - 1)
+                        lineOffset: Math.max(0, (handler.line ?? 1) - 1),
+                        vendor: isLikelyVendorSource(sourceId, vendorPatterns)
                     }
                 )
             );

@@ -1,6 +1,33 @@
 {
-  "entryDocuments": [
-    "index.html",
-    "vw/index.html"
-  ]
+  "input": {
+    "wwwDirectory": "./A4610D-RX/www",
+    "lmParamsJson": "./A4610D-RX/lm_params_json"
+  },
+  "browser": {
+    "entryDocuments": [
+      "index.html",
+      "vw/index.html"
+    ],
+    "libraryGlobals": [
+      {
+        "library": "jQuery",
+        "names": [
+          "$",
+          "jQuery"
+        ],
+        "sourcePatterns": [
+          "(^|/)jquery(?:[-.]\\d|\\.|$)"
+        ]
+      }
+    ]
+  },
+  "vendor": {
+    "jsPatterns": [
+      "(?:^|/)jquery(?:[-.]|$).*\\.min\\.js$"
+    ],
+    "cssPatterns": []
+  },
+  "report": {
+    "outputFile": "./reports/A4610D-RX-report.html"
+  }
 }
