@@ -1,6 +1,6 @@
 input/**
-A4610D-RX/**
-A4610D-TX/**
+A4610D/**
+A4610E/**
 TX/**
 tmp/**
 !input/.gitkeep
