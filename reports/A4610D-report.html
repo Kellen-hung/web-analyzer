@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Web Analyzer Report</title>
+    <style>
+:root {
+    color-scheme: dark;
+    --background: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --heading: #58a6ff;
+    --success: #3fb950;
+    --warning: #d29922;
+    --error: #ff7b72;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.report-shell {
+    min-width: min-content;
+    padding: 28px 32px 48px;
+}
+
+.report-header {
+    margin: 0 0 24px;
+    padding: 0 0 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.report-header h1 {
+    margin: 0 0 10px;
+    color: var(--heading);
+    font-size: 20px;
+    line-height: 1.3;
+}
+
+.report-meta {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 3px 14px;
+    margin: 0;
+}
+
+.report-meta dt { color: var(--muted); }
+.report-meta dd { margin: 0; overflow-wrap: anywhere; }
+
+pre {
+    margin: 0;
+    white-space: pre;
+    tab-size: 4;
+    font: inherit;
+}
+
+.s-heading { color: var(--heading); font-weight: 700; }
+.s-target, .s-success { color: var(--success); }
+.s-high, .s-error { color: var(--error); font-weight: 600; }
+.s-medium, .s-warning { color: var(--warning); font-weight: 600; }
+.s-low, .s-muted, .s-path { color: var(--muted); }
+.s-bold { color: #f0f6fc; font-weight: 700; }
+.s-label { color: var(--heading); }
+.s-value { color: var(--text); }
+</style>
+</head>
+<body>
+    <main class="report-shell">
+        <header class="report-header">
+            <h1>Web Analyzer</h1>
+            <dl class="report-meta">
+                <dt>Analyzed package</dt>
+                <dd>C:\Users\kellen.hung\Desktop\web-analyzer\A4610D\www-backup</dd>
+                <dt>Generated</dt>
+                <dd>2026-09-07T05:40:37.908Z</dd>
+                <dt>Mode</dt>
+                <dd>verbose</dd>
+                <dt>LM_PARAM snapshot</dt>
+                <dd>C:\Users\kellen.hung\Desktop\web-analyzer\A4610D\lm_params_json-backup</dd>
+            </dl>
+        </header>
+        <pre aria-label="Integrated analysis report"><span class="s-heading">PACKAGE</span>
+  99 files
+  5 browser worlds
+  CSS 5 · ELF 2 · HTML 14 · IMAGE 29 · JS 26 · SHELL 23
+
+<span class="s-heading">CLEANUP SUMMARY</span>
+  Files
+    HIGH 5
+    MEDIUM 5
+  Symbols
+    HIGH 6
+    MEDIUM 28
+    LOW 1
+  LM_PARAM
+    JSON fields                 171
+    statically-read fields      72
+    frontend-consumed           67
+    no-consumer candidates      104
+      HIGH 0
+      MEDIUM 104
+      LOW 0
+    frontend-missing-from-JSON  5
+    write-only fields           0
+    dynamic access sites        2
+    generic runtime-code sites  2
+    whole-object risk sites     0
+    coverage errors             0
+
+<span class="s-heading">FILE CLEANUP CANDIDATES · 10</span>
+  <span class="s-high s-error">HIGH</span> js/lang-fr.js (JS)
+    reason=No world membership or file-specific incoming evidence was found. Human review is still required.
+  <span class="s-high s-error">HIGH</span> js/lang-ja.js (JS)
+    reason=No world membership or file-specific incoming evidence was found. Human review is still required.
+  <span class="s-high s-error">HIGH</span> js/lang-zh-cn.js (JS)
+    reason=No world membership or file-specific incoming evidence was found. Human review is still required.
+  <span class="s-high s-error">HIGH</span> js/lang-zh-tw.js (JS)
+    reason=No world membership or file-specific incoming evidence was found. Human review is still required.
+  <span class="s-high s-error">HIGH</span> js/tab-god.js (JS)
+    reason=No world membership or file-specific incoming evidence was found. Human review is still required.
+  <span class="s-medium s-warning">MEDIUM</span> css/start/images/Receiver.png (IMAGE)
+    reason=Asset has no incoming evidence, but dynamic asset naming remains a broader false-positive risk.
+  <span class="s-medium s-warning">MEDIUM</span> css/start/images/Sender.png (IMAGE)
+    reason=Asset has no incoming evidence, but dynamic asset naming remains a broader false-positive risk.
+  <span class="s-medium s-warning">MEDIUM</span> css/start/images/ui-bg_gloss-wave_75_2191c0_500x100.png (IMAGE)
+    reason=Asset has no incoming evidence, but dynamic asset naming remains a broader false-positive risk.
+  <span class="s-medium s-warning">MEDIUM</span> images/src_img.jpg (IMAGE)
+    reason=Asset has no incoming evidence, but dynamic asset naming remains a broader false-positive risk.
+  <span class="s-medium s-warning">MEDIUM</span> result.jpg (IMAGE)
+    reason=Asset has no incoming evidence, but dynamic asset naming remains a broader false-positive risk.
+
+<span class="s-heading">SYMBOL CLEANUP CANDIDATES · 35</span>
+  <span class="s-high s-error">HIGH</span> <span class="s-target s-success">sel_rx</span> · LOCAL
+    worlds=index.html
+    source=js/tab-aes67.js:58
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=HIGH
+    removal-scope=DECLARATION_REVIEW
+    reason=No observed references or consumers were found in the resolved binding scope.
+  <span class="s-high s-error">HIGH</span> <span class="s-target s-success">select</span> · LOCAL
+    worlds=index.html
+    source=js/tab-functions.js:649
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=HIGH
+    removal-scope=DECLARATION_REVIEW
+    reason=No observed references or consumers were found in the resolved binding scope.
+  <span class="s-high s-error">HIGH</span> <span class="s-target s-success">timeout</span> · LOCAL
+    worlds=index.html
+    source=js/tab-functions.js:889
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=HIGH
+    removal-scope=DECLARATION_REVIEW
+    reason=No observed references or consumers were found in the resolved binding scope.
+  <span class="s-high s-error">HIGH</span> <span class="s-target s-success">show_me</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:22
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=HIGH
+    removal-scope=DECLARATION_REVIEW
+    reason=No observed references or consumers were found in the resolved binding scope.
+  <span class="s-high s-error">HIGH</span> <span class="s-target s-success">submit</span> · LOCAL
+    worlds=index.html
+    source=js/tab-system.js:525
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=HIGH
+    removal-scope=DECLARATION_REVIEW
+    reason=No observed references or consumers were found in the resolved binding scope.
+  <span class="s-high s-error">HIGH</span> <span class="s-target s-success">j</span> · LOCAL
+    worlds=index.html
+    source=js/vw_target_selection_lan.js:292
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=HIGH
+    removal-scope=DECLARATION_REVIEW
+    reason=No observed references or consumers were found in the resolved binding scope.
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">openDialog</span> · WORLD_GLOBAL
+    worlds=index.html,vw/index.html
+    source=js/include.js:12
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">dummy_nodes_legacy</span> · WORLD_GLOBAL
+    worlds=index.html,vw/index.html
+    source=js/include.js:53
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; review the binding separately from its potentially effectful initializer statement.
+    risk-flags=INITIALIZER_MAY_HAVE_SIDE_EFFECTS,DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">load_scripts</span> · WORLD_GLOBAL
+    worlds=index.html,vw/index.html
+    source=js/include.js:536
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_BEHAVIOR_IN_CANDIDATE_BODY,DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">selected</span> · LOCAL
+    worlds=index.html
+    source=js/index.js:172
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; review the binding separately from its potentially effectful initializer statement.
+    risk-flags=INITIALIZER_MAY_HAVE_SIDE_EFFECTS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">aes67_rx</span> · LOCAL
+    worlds=index.html
+    source=js/tab-aes67.js:210
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; review the binding separately from its potentially effectful initializer statement.
+    risk-flags=INITIALIZER_MAY_HAVE_SIDE_EFFECTS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">$soip_type_option</span> · LOCAL
+    worlds=index.html
+    source=js/tab-functions.js:412
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; review the binding separately from its potentially effectful initializer statement.
+    risk-flags=INITIALIZER_MAY_HAVE_SIDE_EFFECTS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">$video_on</span> · LOCAL
+    worlds=index.html
+    source=js/tab-functions.js:535
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; review the binding separately from its potentially effectful initializer statement.
+    risk-flags=INITIALIZER_MAY_HAVE_SIDE_EFFECTS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">$scaler_output</span> · LOCAL
+    worlds=index.html
+    source=js/tab-functions.js:545
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; review the binding separately from its potentially effectful initializer statement.
+    risk-flags=INITIALIZER_MAY_HAVE_SIDE_EFFECTS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">km_delGrp</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-km_overip.js:189
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">km_setMain</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-km_overip.js:198
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">km_gafInput</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-km_overip.js:269
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">km_gaAdd</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-km_overip.js:270
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">km_gscChange</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-km_overip.js:294
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">km_delPh</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-km_overip.js:307
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">km_grChange</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-km_overip.js:390
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">km_gsPick</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-km_overip.js:630
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">that</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:8
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=1 references=1
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">ip</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:10
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=1 references=1
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">netmask</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:11
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=1 references=1
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">gateway</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:12
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=1 references=1
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">dhcp_ip</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:16
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=4 references=4
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">dhcp_netmask</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:17
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=4 references=4
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">dhcp_gateway</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:18
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=4 references=4
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">share_usb_auto_mode</span> · LOCAL
+    worlds=index.html
+    source=js/tab-network.js:487
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; review the binding separately from its potentially effectful initializer statement.
+    risk-flags=INITIALIZER_MAY_HAVE_SIDE_EFFECTS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">statTimer</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-system.js:47
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">statActive</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/tab-system.js:48
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=2 references=2
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL,DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">vw_adv_update_target_list</span> · WORLD_GLOBAL
+    worlds=index.html
+    source=js/vw_target_selection_lan.js:242
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=DYNAMIC_SCRIPT_LOAD_PRESENT
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">is_host</span> · LOCAL
+    worlds=index.html
+    source=js/vw_target_selection_lan.js:293
+    definition=VariableDeclarator
+    declarations=1 reads=0 writes=1 references=1
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=MEDIUM
+    removal-scope=BINDING_REVIEW
+    reason=The binding has zero observed consumers; write evidence is preserved for human review.
+    risk-flags=WRITE_ONLY_SYMBOL
+  <span class="s-low s-muted">LOW</span> <span class="s-target s-success">dbgMsg</span> · WORLD_GLOBAL
+    worlds=update_fw.html
+    source=countup.js:20
+    definition=FunctionDeclaration
+    declarations=1 reads=0 writes=0 references=0
+    classification=UNUSED_SYMBOL_CANDIDATE confidence=LOW
+    removal-scope=DECLARATION_REVIEW
+    reason=The binding has zero observed consumers and remains visible with uncertainty recorded as risk.
+    risk-flags=RUNTIME_DYNAMIC_CODE_IN_SOURCE
+
+<span class="s-heading">SYMBOL CANDIDATE RISKS</span>
+  DYNAMIC_SCRIPT_LOAD_PRESENT                14
+  WRITE_ONLY_SYMBOL                          9
+  INITIALIZER_MAY_HAVE_SIDE_EFFECTS          7
+  DYNAMIC_BEHAVIOR_IN_CANDIDATE_BODY         1
+  RUNTIME_DYNAMIC_CODE_IN_SOURCE             1
+
+<span class="s-heading">SYMBOL COVERAGE GAPS · 0</span>
+  none
+
+<span class="s-heading">LM_PARAM CLEANUP CANDIDATES · 104</span>
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">STATE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">ACCESS_ON</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">DBG</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">SHARE_USB_ON_FIRST_PEER</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">HOSTNAMEBYDIPSWITCH</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">RESET_CH_ON_BOOT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">HOSTNAME_ID</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">MULTICAST_LEAVE_FORCE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">UI_FEATURE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">SCENARIO</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">GWIP</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">FW_MODEL_NAME</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">FW_MODEL_DESC</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">FW_VERSION_FULL</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">ETH_LINK_STATE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">ETH_LINK_MODE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">LM_LINK_OFF_TIMEOUT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">SEAMLESS_SWITCH</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">JUMBO_MTU</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">V_1080I_TO_720P</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">V_BCD_THRESHOLD</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">V_QUALITY_MODE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">NO_PWRBTN</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">NO_CEC</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">CEC_DRV_OPTION</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">MFG_MODE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">SOIP_GUEST_ON</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">SOIP_TYPE2</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">SOIP_TYPE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">SOIP_EN</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">NO_HWUSB</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">NO_IR</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">IR_GUEST_ON</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">IR_SW_DECODE_ON</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">IR_SW_DECODE_NEC_CFG</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">NO_I2S</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">UDP_ON</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">EN_LOG</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">V_REJECT_HDCP</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">V_IGNORE_CTS7_33</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">V_CHUNK_SIZE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">V_HDMI_HDR_MODE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_IO_SELECT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_OUTPUT_DELAY</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_TYPE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">AUDIO_SELECT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">AUDIO_IN_MUTE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">AUDIO_OUT_MUTE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_ANALOG_OUT_VOL</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_ADDON_CHS</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_ADDON_RATE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_BRIDGE_EN</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_OUT_SRC_SEL</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">DANTE_OP_MODE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">AVA_READY</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VW_VAR_POS_IDX</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VW_VAR_H_SHIFT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VW_VAR_V_SHIFT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VW_VAR_H_SCALE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VW_VAR_V_SCALE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">MY_ROW_ID</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">THE_ROW_ID</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VW_VAR_POS_R</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VW_VAR_POS_C</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VW_VAR_DELAY_KICK</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN1_SHORT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN1_LONG</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN1_SHORT_ON_BOOT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN1_LONG_ON_BOOT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN1_SHORT_ON_ETH_OFF</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN1_LONG_ON_ETH_OFF</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN2_SHORT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN2_LONG</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN2_SHORT_ON_BOOT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN2_LONG_ON_BOOT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN2_SHORT_ON_ETH_OFF</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN2_LONG_ON_ETH_OFF</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN_INIT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN1_DELAY</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">BTN2_DELAY</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">EN_8021X</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">NO_ARP</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_ARP_PUBLISH_ON</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_ARP_INPUT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">A_ARP_RR</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">CH_SELECT_V</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">CH_SELECT_A</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">CH_SELECT_U</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">CH_SELECT_S</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">CH_SELECT_R</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">CH_SELECT_C</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">USB_DISABLE_DEVICES</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">USB_ENABLE_DEVICES</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">USB_DISABLE_CLASSES</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">USB_ENABLE_CLASSES</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">USB_CONFLICT_POLICY</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">USB_DEFAULT_POLICY</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">GUI_SHOW_TEXT_INIT</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">SHOW_CH_OSD</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">I2S_CLOCK_LOCK_MODE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">EDID_DATA</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">VID</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">DANTE_TRIALMODE</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+  <span class="s-medium s-warning">MEDIUM</span> <span class="s-target s-success">_result</span>
+    reads=0 writes=0 read-writes=0
+    reason=No static frontend read was observed; uncertainty is retained as risk.
+    risk=DYNAMIC_LM_PARAM_PROPERTY_ACCESS
+
+<span class="s-heading">LM_PARAM CONSUMED FIELDS · 67</span>
+  A_ADDON, A_ADDON_SUPPORT, A_ANALOG_IN_VOL, AST_PLATFORM, AUTH_1X_EN, AUTH_1X_METHOD, AUTH_1X_VALID_SERVER_EN, CH_SELECT, EDID_USE, EN_KM_EXT, EN_VIDEO_WALL, FEAT_KM_EXT, FREEZE_ON_LINK_OFF, FW_VERSION, GATEWAYIP, HOSTNAME_PREFIX, HOSTNAME_RX_MIDDLE, HOSTNAME_TX_MIDDLE, IP_MODE, IPADDR, IS_HOST, MULTICAST_ON, MY_GATEWAYIP, MY_IP, MY_MAC, MY_NAME, MY_NETMASK, NETMASK, NO_KMOIP, NO_SOIP, NO_USB, NO_VIDEO, PID, PRODUCT_DESC, PRODUCT_NAME, PROFILE, RX_ID, S0_BAUDRATE, SERIAL_MODE, SHARE_USB, SHARE_USB_AUTO_MODE, SN, SOC_OP_MODE, SOC_VER, UI_NOVIDEO_SCREEN, V_COLOR_SPACE, V_LINK_OFF_ACTION, V_OUTPUT_TIMING_CONVERT, V_PWR_SAVE_TIMEOUT, V_RES, V_SRC_UNAVAILABLE_TIMEOUT, V_TURN_OFF_SCREEN_ON_PWR_SAVE, V_VIDEO_LOST_ACTION, VW_VAR_COLUMN, VW_VAR_MAX_COLUMN, VW_VAR_MAX_ROW, VW_VAR_MONINFO_HA, VW_VAR_MONINFO_HT, VW_VAR_MONINFO_VA, VW_VAR_MONINFO_VT, VW_VAR_POS_MAX_COL, VW_VAR_POS_MAX_ROW, VW_VAR_ROTATE, VW_VAR_ROW, VW_VAR_STRETCH_TYPE, VW_VAR_TAIL_IDX, WEB_UI_CFG
+
+<span class="s-heading">LM_PARAM FRONTEND-MISSING FIELDS · 5</span>
+  <span class="s-target s-success">EDID_SELECT</span>
+    reads=6 consumers=index.html:js/tab-system.js:400,index.html:js/tab-system.js:420,index.html:js/tab-system.js:422,index.html:js/tab-system.js:424,index.html:js/tab-system.js:426,index.html:js/tab-system.js:428
+  <span class="s-target s-success">ENG_WEB</span>
+    reads=2 consumers=index.html:js/tab-functions.js:1171,index.html:js/tab-functions.js:1172
+  <span class="s-target s-success">USB_HID_URB_INTERVAL</span>
+    reads=3 consumers=index.html:js/tab-functions.js:89,index.html:js/tab-functions.js:135,index.html:js/tab-functions.js:167
+  <span class="s-target s-success">USB_SET_ADDR_HACK</span>
+    reads=3 consumers=index.html:js/tab-functions.js:88,index.html:js/tab-functions.js:134,index.html:js/tab-functions.js:166
+  <span class="s-target s-success">V_FRAME_RATE</span>
+    reads=2 consumers=index.html:js/tab-functions.js:573,index.html:js/tab-functions.js:574
+
+<span class="s-heading">LM_PARAM RISKS · 4</span>
+  DYNAMIC_LM_PARAM_PROPERTY_ACCESS           2
+  RUNTIME_DYNAMIC_CODE                       2
+
+<span class="s-heading">LM_PARAM COVERAGE ERRORS · 0</span>
+  none
+
+<span class="s-heading">ANALYSIS HEALTH</span>
+  parse errors: 0
+  partial references: 68
+  unresolved references: 13
+  referenced but not packaged: 6
+  unknown globals: 9
+  dynamic-risk candidates: 15
+  symbol coverage gaps: 0
+  vendor internals outside queue: 6
+  generic LM_PARAM runtime-code sites: 2
+
+<span class="s-heading">BROWSER WORLDS · 5</span>
+  <span class="s-bold">index.html</span> · ENTRY_DOCUMENT · sources 22 · globals 179 · unresolved 42 · parse-errors 0
+  <span class="s-bold">vw/index.html</span> · ENTRY_DOCUMENT · sources 11 · globals 45 · unresolved 31 · parse-errors 0
+  <span class="s-bold">update_fw.html</span> · BACKEND_REFERENCED_DOCUMENT_CANDIDATE · sources 4 · globals 25 · unresolved 8 · parse-errors 0
+  <span class="s-bold">index_fw.html::iframe-1</span> · IFRAME_DOCUMENT · sources 1 · globals 1 · unresolved 4 · parse-errors 0
+  <span class="s-bold">upload_novideo_logo.html::iframe-2</span> · IFRAME_DOCUMENT · sources 4 · globals 1 · unresolved 24 · parse-errors 0
+
+<span class="s-heading">UNKNOWN GLOBALS</span>
+  <span class="s-bold">index.html</span> (3) ActiveXObject, is_ip_valid, LANG_DICT
+  <span class="s-bold">vw/index.html</span> (2) ActiveXObject, LANG
+  <span class="s-bold">update_fw.html</span> (1) ActiveXObject
+  <span class="s-bold">index_fw.html::iframe-1</span> (1) ActiveXObject
+  <span class="s-bold">upload_novideo_logo.html::iframe-2</span> (2) ActiveXObject, novideoUpdate
+
+Use --debug for internal world/reference/corpus details.
+</pre>
+    </main>
+</body>
+</html>

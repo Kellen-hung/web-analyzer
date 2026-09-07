@@ -377,7 +377,7 @@ test("report header includes package, timestamp, mode, and LM_PARAM path", () =>
         lmParamJsonPath: "C:\\packages\\RX\\lm_params_json"
     });
 
-    assert.match(html, /<h1>RX Web Analyzer<\/h1>/);
+    assert.match(html, /<h1>Web Analyzer<\/h1>/);
     assert.match(html, /C:\\packages\\RX\\www/);
     assert.match(html, /2026-09-02T04:05:06\.000Z/);
     assert.match(html, /<dd>verbose<\/dd>/);

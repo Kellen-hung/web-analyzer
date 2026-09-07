@@ -1,10 +1,10 @@
-# RX Web Analyzer
+# Web Analyzer
 
-This Node.js analyzer builds conservative Phase 1 evidence for a configured
-legacy web package. It reports browser worlds, file-level incoming
-evidence, unresolved references, and human-review cleanup candidates. It never
-modifies the analyzed package and does not claim that a candidate is safe to
-delete.
+This Node.js analyzer performs read-only static analysis on a configured legacy
+web package. It reports browser worlds, file-level incoming evidence,
+JavaScript symbols, `LM_PARAM` field usage, unresolved references, and
+human-review cleanup candidates. It never modifies the analyzed package and
+does not claim that a candidate is safe to delete.
 
 ## Run
 
@@ -38,12 +38,18 @@ The report is written to stdout and contains:
 - referenced-but-not-packaged resources;
 - file candidates and retained unresolved evidence.
 
-Package-specific inputs are centralized in `analyzer.config.json`. The current
-configuration analyzes `4601D-RX/www` and its sibling `lm_params_json`, and
-seeds `index.html` plus `vw/index.html` as browser entry documents. Input paths
-are resolved relative to the config file; entry documents and vendor matching
-use POSIX-style package paths. Switching to another package should only require
-editing this file. The analyzer never modifies either configured input.
+## Switch between RX and TX
+
+Package-specific inputs are centralized in `analyzer.config.json`. Switching
+between RX and TX requires changing this config file only; no source-code
+changes are required. Set `input.wwwDirectory`, `input.lmParamsJson`, and
+`report.outputFile` for the selected package, and adjust
+`browser.entryDocuments`, library globals, or vendor patterns there if that
+package differs.
+
+Input paths are resolved relative to the config file. Entry documents and
+vendor matching use POSIX-style package paths. The analyzer never modifies
+either configured input.
 
 The same config also contains case-insensitive regular-expression sources for
 vendor JS/CSS identification, source-backed library globals, and the generated

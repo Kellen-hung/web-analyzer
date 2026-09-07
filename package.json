@@ -1,7 +1,7 @@
 {
   "name": "web-analyzer",
   "version": "1.0.0",
-  "description": "Conservative world and cleanup-evidence analyzer for configured RX WebUI packages.",
+  "description": "Conservative world and cleanup-evidence analyzer for configured legacy WebUI packages.",
   "main": "src/main.mjs",
   "scripts": {
     "test": "node --test",

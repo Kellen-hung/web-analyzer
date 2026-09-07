@@ -1,8 +1,8 @@
-# RX Web Analyzer 架構說明
+# Web Analyzer 架構說明
 
 ## 1. 系統目的
 
-RX Web Analyzer 是一套針對 legacy RX WebUI 套件的唯讀靜態分析工具。它將檔案、瀏覽器執行環境、JavaScript symbol，以及後端提供的 `LM_PARAM` JSON 欄位整理成可供人工審查的 cleanup report。
+Web Analyzer 是一套針對 legacy WebUI 套件的唯讀靜態分析工具，不綁定 RX 或 TX。它將檔案、瀏覽器執行環境、JavaScript symbol，以及後端提供的 `LM_PARAM` JSON 欄位整理成可供人工審查的 cleanup report。套件差異集中在 `analyzer.config.json`，切換 RX/TX 不需修改 analyzer source。
 
 本工具回答的是：
 
@@ -11,6 +11,15 @@ RX Web Analyzer 是一套針對 legacy RX WebUI 套件的唯讀靜態分析工�
 - 哪些 `LM_PARAM` JSON 欄位沒有已確認的前端讀取？
 
 本工具不會自動刪除檔案、symbol 或 JSON 欄位，也不會宣稱候選項目一定是 dead code。
+
+### 1.1 交付階段
+
+目前完成到 **Phase 4 — Report**：
+
+1. **Phase 1 — File & World Analysis**：inventory、HTML/JS/CSS/corpus facts、URL 與 browser world resolution、file candidates。
+2. **Phase 2 — Symbol Analysis**：scope-aware symbol facts、world-level consumer resolution、physical declaration candidates。
+3. **Phase 3 — LM_PARAM Analysis**：JSON field aggregation、read/write access、dynamic risks 與 coverage handling。
+4. **Phase 4 — Report**：共用 semantic report，輸出 default／verbose／debug terminal report 與 self-contained HTML artifact。
 
 ## 2. 核心設計原則
 
@@ -67,7 +76,9 @@ flowchart TD
     FileReport --> Result[analyzePackage result]
     SymbolCandidates --> Result
     LMAnalyzer --> Result
-    Result --> CLI[Default / Verbose / Debug Reports]
+    Result --> IntegratedReport[Integrated Semantic Report]
+    IntegratedReport --> CLI[Terminal: Default / Verbose / Debug]
+    IntegratedReport --> HTMLReport[Self-contained HTML Artifact]
 ```
 
 頂層協調器是 `src/analyzer.mjs`。`analyzePackage()` 依序建立：
@@ -87,13 +98,13 @@ flowchart TD
 
 ## 4. 設定與輸入
 
-CLI 只讀取一次 `analyzer.config.json`，由 `src/config/analyzer_config.mjs` 驗證、正規化並將結果向下傳遞。目前設定指向清理後的 `4601D-RX` snapshot：
+CLI 只讀取一次 `analyzer.config.json`，由 `src/config/analyzer_config.mjs` 驗證、正規化並將結果向下傳遞。所有 package-specific 差異都留在這個檔案；切換 RX/TX 時只改 config，不改 `src/`。以下是目前設定格式的範例：
 
 ```json
 {
   "input": {
-    "wwwDirectory": "./4601D-RX/www",
-    "lmParamsJson": "./4601D-RX/lm_params_json"
+    "wwwDirectory": "./A4610E/www",
+    "lmParamsJson": "./A4610E/lm_params_json"
   },
   "browser": {
     "entryDocuments": [
@@ -113,7 +124,7 @@ CLI 只讀取一次 `analyzer.config.json`，由 `src/config/analyzer_config.mjs
     "cssPatterns": []
   },
   "report": {
-    "outputFile": "./reports/4601D-RX-report.html"
+    "outputFile": "./reports/A4610E-report.html"
   }
 }
 ```
@@ -355,9 +366,9 @@ result
 
 Facts 與 analysis results 同時存在，讓 reporting、tests 或後續工具可以檢查結論背後的原始證據。
 
-## 11. Reporting
+## 11. Phase 4 — Reporting
 
-Reporting 位於 `src/report/`。`integrated_report.mjs` 只根據既有 analysis result 組合 mode-specific sections，內容中的 heading、confidence、warning、error、success、target、path 等樣式先表示成 semantic tokens：
+Phase 4 將 Phase 1–3 的 analysis result 轉成可交付報表。Reporting 位於 `src/report/`；`integrated_report.mjs` 只根據既有結果組合 mode-specific sections，內容中的 heading、confidence、warning、error、success、target、path 等樣式先表示成 semantic tokens：
 
 ```text
 analysis result

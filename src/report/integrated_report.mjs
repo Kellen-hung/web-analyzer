@@ -74,7 +74,7 @@ export function buildIntegratedReport(
 
     if (includeBanner) {
         sections.push([
-            context.colors.bold("RX Web Analyzer"),
+            context.colors.bold("Web Analyzer"),
             context.path(root ?? "")
         ]);
     }

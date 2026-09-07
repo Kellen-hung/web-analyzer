@@ -6,7 +6,6 @@ tmp/**
 !input/.gitkeep
 
 output/
-reports/
 node_modules/
 
 *.tgz

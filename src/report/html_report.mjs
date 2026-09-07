@@ -120,13 +120,13 @@ export function renderHtmlReport(
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="dark">
-    <title>RX Web Analyzer Report</title>
+    <title>Web Analyzer Report</title>
     <style>${REPORT_STYLES}</style>
 </head>
 <body>
     <main class="report-shell">
         <header class="report-header">
-            <h1>RX Web Analyzer</h1>
+            <h1>Web Analyzer</h1>
             <dl class="report-meta">
                 <dt>Analyzed package</dt>
                 <dd>${escapeHtml(root)}</dd>
