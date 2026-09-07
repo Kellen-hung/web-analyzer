@@ -17,7 +17,7 @@ let reportResult;
 
 async function withDirectory(callback) {
     const directory = await fs.mkdtemp(
-        path.join(os.tmpdir(), "rx-web-analyzer-html-test-")
+        path.join(os.tmpdir(), "web-analyzer-html-test-")
     );
 
     try {

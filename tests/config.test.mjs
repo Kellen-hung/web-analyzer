@@ -11,7 +11,7 @@ import {
 
 async function withConfig(rawConfig, callback) {
     const directory = await fs.mkdtemp(
-        path.join(os.tmpdir(), "rx-web-analyzer-config-test-")
+        path.join(os.tmpdir(), "web-analyzer-config-test-")
     );
     const configPath = path.join(directory, "analyzer.config.json");
 

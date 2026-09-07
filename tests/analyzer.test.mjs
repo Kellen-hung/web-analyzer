@@ -13,7 +13,7 @@ import {
 
 async function withFixture(files, callback) {
     const directory = await fs.mkdtemp(
-        path.join(os.tmpdir(), "rx-web-analyzer-test-")
+        path.join(os.tmpdir(), "web-analyzer-test-")
     );
 
     try {

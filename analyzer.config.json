@@ -1,7 +1,7 @@
 {
   "input": {
-    "wwwDirectory": "./A4610D-RX/www",
-    "lmParamsJson": "./A4610D-RX/lm_params_json"
+    "wwwDirectory": "./A4610E/www",
+    "lmParamsJson": "./A4610E/lm_params_json"
   },
   "browser": {
     "entryDocuments": [
@@ -28,6 +28,6 @@
     "cssPatterns": []
   },
   "report": {
-    "outputFile": "./reports/A4610D-RX-report.html"
+    "outputFile": "./reports/A4610E-report.html"
   }
 }

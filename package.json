@@ -1,5 +1,5 @@
 {
-  "name": "rx-web-analyzer",
+  "name": "web-analyzer",
   "version": "1.0.0",
   "description": "Conservative world and cleanup-evidence analyzer for configured RX WebUI packages.",
   "main": "src/main.mjs",
